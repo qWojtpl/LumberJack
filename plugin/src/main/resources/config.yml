@@ -1,0 +1,40 @@
+config:
+
+  # Define max tree height.
+
+  maxTreeHeight: 20
+
+  # In ticks. In default, max one log will be destroyed every 2 ticks
+
+  woodDestroyInterval: 2
+
+  # In ticks. In default, max one leave will be destroyed every 1 tick
+
+  leavesDestroyInterval: 1
+
+  # Wood range. Defines range from source block how many blocks can be destroyed (to sides)
+  # When set to 3 it will destroy logs of BBBSBBB (B - block, S - source block)
+
+  woodRange: 3
+
+  # Leaves range. Defines range from source block how many blocks can be destroyed (to sides)
+
+  leavesRange: 3
+
+  # Required leaves to mark structure with wood and leaves as a tree
+
+  requiredLeaves: 15
+
+  # Permission to use this plugin
+
+  permission: lumberjack.use
+
+  # When using these items you'll chop tree like lumberjack (if you have permission)
+
+  axes:
+  - WOODEN_AXE
+  - STONE_AXE
+  - IRON_AXE
+  - GOLDEN_AXE
+  - DIAMOND_AXE
+  - NETHERITE_AXE

@@ -1,0 +1,6 @@
+name: LumberJack
+version: '${project.version}'
+main: pl.lumberjack.LumberJack
+api-version: 1.19
+authors: [Assasin98980]
+description: Add lumberjack feature to your Minecraft server
