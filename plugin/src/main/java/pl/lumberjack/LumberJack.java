@@ -16,12 +16,12 @@ public final class LumberJack extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        main = this;
+        main = this; // Set main instance
         this.dataHandler = new DataHandler();
-        dataHandler.loadConfig();
-        this.permissionManager = new PermissionManager();
-        getServer().getPluginManager().registerEvents(new Events(), this);
-        getCommand("lumberjack").setExecutor(new Commands());
+        dataHandler.loadConfig(); // Load config
+        this.permissionManager = new PermissionManager(); // Register permissions
+        getServer().getPluginManager().registerEvents(new Events(), this); // Register events
+        getCommand("lumberjack").setExecutor(new Commands()); // Register command
         getLogger().info("Loaded!");
     }
 

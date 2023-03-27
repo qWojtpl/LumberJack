@@ -31,7 +31,7 @@ public class Commands implements CommandExecutor {
         sender.sendMessage("§2<---------- §6LumberJack §2---------->");
         sender.sendMessage(" ");
         sender.sendMessage("§6/lj reload - §2Reload configuration");
-        sender.sendMessage("§6Max tree size: §2" + dataHandler.getTreeMaxHeight());
+        sender.sendMessage("§6Max tree height: §2" + dataHandler.getTreeMaxHeight());
         sender.sendMessage("§6Wood destroy interval: §2" + dataHandler.getWoodDestroyInterval() + " ticks");
         sender.sendMessage("§6Leaves destroy interval: §2" + dataHandler.getLeavesDestroyInterval() + " ticks");
         sender.sendMessage("§6Wood range: §2" + dataHandler.getWoodRange());

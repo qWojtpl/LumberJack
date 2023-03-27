@@ -15,11 +15,11 @@ config:
   # Wood range. Defines range from source block how many blocks can be destroyed (to sides)
   # When set to 3 it will destroy logs of BBBSBBB (B - block, S - source block)
 
-  woodRange: 3
+  woodRange: 2
 
   # Leaves range. Defines range from source block how many blocks can be destroyed (to sides)
 
-  leavesRange: 3
+  leavesRange: 2
 
   # Required leaves to mark structure with wood and leaves as a tree
 
@@ -29,7 +29,7 @@ config:
   # When set to 10 then 10 leaves block is counted as 1 destroyed leaves block (in durability)
   # 1 for disable
 
-  leavesReduction: 2
+  leavesReduction: 18
 
   # Permission to use this lumberjack feature
 
