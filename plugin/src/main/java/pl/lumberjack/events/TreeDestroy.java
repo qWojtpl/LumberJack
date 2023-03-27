@@ -114,12 +114,12 @@ public class TreeDestroy {
                 location.getBlock().setType(Material.AIR);
                 ItemStack is = new ItemStack(material);
                 is.setAmount(1);
-                if (hasSpace()) {
+                if(hasSpace()) {
                     player.getInventory().addItem(is);
                 } else {
                     location.getWorld().dropItem(location, is);
                 }
-                player.playSound(location, Sound.BLOCK_WOOD_BREAK, 1.0F, 1.0F);
+                if(player.isOnline()) player.playSound(location, Sound.BLOCK_WOOD_BREAK, 1.0F, 1.0F);
             }
             woods.remove(0);
         }, 0, LumberJack.getInstance().getDataHandler().getWoodDestroyInterval());
@@ -131,13 +131,14 @@ public class TreeDestroy {
             Location location = leaves.get(0);
             if(location.getBlock().getType().equals(leavesMaterial)) {
                 location.getBlock().breakNaturally();
-                player.playSound(location, Sound.BLOCK_GRASS_BREAK, 1.0F, 1.0F);
+                if(player.isOnline()) player.playSound(location, Sound.BLOCK_GRASS_BREAK, 1.0F, 1.0F);
             }
             leaves.remove(0);
         }, 0, LumberJack.getInstance().getDataHandler().getLeavesDestroyInterval());
     }
 
     private boolean hasSpace() {
+        if(!player.isOnline()) return false;
         Inventory playerInventory = player.getInventory();
         for(int i = 0; i < 36; i++) {
             if(player.getInventory().getItem(i) != null) {
