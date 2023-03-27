@@ -25,7 +25,13 @@ config:
 
   requiredLeaves: 15
 
-  # Permission to use this plugin
+  # When set to 1 then 1 leaves block is counted as normal block destroy. (in axe durability)
+  # When set to 10 then 10 leaves block is counted as 1 destroyed leaves block (in durability)
+  # 1 for disable
+
+  leavesReduction: 2
+
+  # Permission to use this lumberjack feature
 
   permission: lumberjack.use
 

@@ -3,6 +3,7 @@ package pl.lumberjack.events;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.Inventory;
@@ -41,8 +42,8 @@ public class TreeDestroy {
             double startX = location.getX();
             double startZ = location.getZ();
             int range = LumberJack.getInstance().getDataHandler().getWoodRange();
-            for(int j = range * -1; j < range; j++) {
-                for(int k = range * -1; k < range; k++) {
+            for(int j = range * -1; j <= range; j++) {
+                for(int k = range * -1; k <= range; k++) {
                     location.setX(startX + j);
                     location.setZ(startZ + k);
                     if (location.getBlock().getType().equals(material)) {
@@ -53,8 +54,8 @@ public class TreeDestroy {
             }
             if(leavesMaterial != null) {
                 range = LumberJack.getInstance().getDataHandler().getLeavesRange();
-                for (int j = range * -1; j < range; j++) {
-                    for (int k = range * -1; k < range; k++) {
+                for (int j = range * -1; j <= range; j++) {
+                    for (int k = range * -1; k <= range; k++) {
                         location.setX(startX + j);
                         location.setZ(startZ + k);
                         if (location.getBlock().getType().equals(leavesMaterial)) {
@@ -68,18 +69,22 @@ public class TreeDestroy {
             }
         }
         ItemStack axe = player.getInventory().getItemInMainHand();
-        int itemDurability = axe.getType().getMaxDurability() - axe.getDurability();
-        int newDurability = axe.getDurability() + totalWood + totalLeaves;
-        if(itemDurability <= totalWood + totalLeaves) {
-            if(itemDurability <= totalWood) {
-                event.setCancelled(false);
-                return;
-            } else {
-                leaves.clear();
-                newDurability -= totalLeaves;
+        //LumberJack.getInstance().getLogger().info(axe.getItemMeta().getEnchantLevel(Enchantment.DURABILITY) + " ");
+        if(!axe.getItemMeta().isUnbreakable()) {
+            int leavesReduction = LumberJack.getInstance().getDataHandler().getLeavesReduction();
+            int itemDurability = axe.getType().getMaxDurability() - axe.getDurability();
+            int reduceDurability = axe.getDurability() + totalWood + totalLeaves / leavesReduction;
+            if(itemDurability <= totalWood + totalLeaves / leavesReduction) {
+                if(itemDurability <= totalWood) {
+                    event.setCancelled(false);
+                    return;
+                } else {
+                    leaves.clear();
+                    reduceDurability -= totalLeaves;
+                }
             }
+            axe.setDurability((short) reduceDurability);
         }
-        axe.setDurability((short) newDurability);
         if(totalLeaves >= requiredLeaves) {
             destroyTree();
         } else {
@@ -94,15 +99,17 @@ public class TreeDestroy {
                 return;
             }
             Location location = woods.get(0);
-            location.getBlock().setType(Material.AIR);
-            ItemStack is = new ItemStack(material);
-            is.setAmount(1);
-            if(hasSpace()) {
-                player.getInventory().addItem(is);
-            } else {
-                location.getWorld().dropItem(location, is);
+            if(location.getBlock().getType().equals(material)) {
+                location.getBlock().setType(Material.AIR);
+                ItemStack is = new ItemStack(material);
+                is.setAmount(1);
+                if (hasSpace()) {
+                    player.getInventory().addItem(is);
+                } else {
+                    location.getWorld().dropItem(location, is);
+                }
+                player.playSound(location, Sound.BLOCK_WOOD_BREAK, 1.0F, 1.0F);
             }
-            player.playSound(location, Sound.BLOCK_WOOD_BREAK, 1.0F, 1.0F);
             woods.remove(0);
         }, 0, LumberJack.getInstance().getDataHandler().getWoodDestroyInterval());
         leavesTask = LumberJack.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(LumberJack.getInstance(), () -> {
@@ -111,8 +118,10 @@ public class TreeDestroy {
                 return;
             }
             Location location = leaves.get(0);
-            location.getBlock().breakNaturally();
-            player.playSound(location, Sound.BLOCK_GRASS_BREAK, 1.0F, 1.0F);
+            if(location.getBlock().getType().equals(leavesMaterial)) {
+                location.getBlock().breakNaturally();
+                player.playSound(location, Sound.BLOCK_GRASS_BREAK, 1.0F, 1.0F);
+            }
             leaves.remove(0);
         }, 0, LumberJack.getInstance().getDataHandler().getLeavesDestroyInterval());
     }

@@ -2,6 +2,7 @@ package pl.lumberjack;
 
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.lumberjack.commands.Commands;
 import pl.lumberjack.data.DataHandler;
 import pl.lumberjack.events.Events;
 import pl.lumberjack.permissions.PermissionManager;
@@ -20,6 +21,7 @@ public final class LumberJack extends JavaPlugin {
         dataHandler.loadConfig();
         this.permissionManager = new PermissionManager();
         getServer().getPluginManager().registerEvents(new Events(), this);
+        getCommand("lumberjack").setExecutor(new Commands());
         getLogger().info("Loaded!");
     }
 

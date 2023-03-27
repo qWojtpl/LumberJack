@@ -13,6 +13,7 @@ public class PermissionManager {
 
     public PermissionManager() {
         registerPermission(LumberJack.getInstance().getDataHandler().getPermission(), "Use LumberJack feature");
+        registerPermission("lumberjack.manage", "Manage LumberJack plugin");
     }
 
     public void registerPermission(String permission, String description) {

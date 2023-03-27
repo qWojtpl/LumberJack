@@ -4,3 +4,9 @@ main: pl.lumberjack.LumberJack
 api-version: 1.19
 authors: [Assasin98980]
 description: Add lumberjack feature to your Minecraft server
+commands:
+  lumberjack:
+    usage: /<command>
+    description: Manage LumberJack plugin
+    aliases:
+      - lj
