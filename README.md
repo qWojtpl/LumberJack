@@ -45,3 +45,6 @@ Put lumberjack.jar to your plugins folder and restart the server.
 - Unbreaking enchantment affects to durability change<br>
 - If item is unbreakable then nothing will happen to durability<br>
 - Silktouch won't destroy leaves as a block<br>
+- If you have inventory space all wood will be added to your inventory<br>
+- If player is not online or doesn't have space in his inventory, then wood will be dropped<br>
+- YOU CAN get sticks, apples, saplings etc. from leaves, but not directly to your inventory<br>
