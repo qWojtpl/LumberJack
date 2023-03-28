@@ -32,6 +32,7 @@ config:
   leavesReduction: 18
 
   # Permission to use this lumberjack feature
+  # Remember to restart/reload the server after changing that (it won't apply on /lj reload)
 
   permission: lumberjack.use
 
