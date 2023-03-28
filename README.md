@@ -26,7 +26,7 @@ Put lumberjack.jar to your plugins folder and restart the server.
 `leavesRange` - Defines range from source block to every sides to check for leaves. Default: `2`<br><br>
 `requiredLeaves` - How many leaves must be found to chop this structure like lumberjack (it's protection against mistake house destroying). Default: `15`<br><br>
 `leavesReduction` - By default in minecraft, if you destroy 1 leaves block it will remove 1 from item's durability. Lumberjack feature can destroy all leaves from tree, but if you don't want to destroy your axe so much you can set value to higher numbers. If this number is 18, then every 18 blocks 1 durability will be removed form axe. Default: `18`<br><br>
-`permission` - Permission to use lumberjack feature. Default: `lumberjack.use`<br><br>
+`permission` - Permission to use lumberjack feature. You must restart server to apply it (it doesn't updating on /lj reload). Default: `lumberjack.use`<br><br>
 `axes` - YAML list of items, which can be used in lumberjack feature.<br>
 
 </details>
