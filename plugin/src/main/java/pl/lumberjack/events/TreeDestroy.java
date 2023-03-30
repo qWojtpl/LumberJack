@@ -37,13 +37,18 @@ public class TreeDestroy {
         int totalLeaves = 0;
         int totalWood = 0;
         int requiredLeaves = LumberJack.getInstance().getDataHandler().getRequiredLeaves();
-        for(int i = 0; i < LumberJack.getInstance().getDataHandler().getTreeMaxHeight(); i++) {
+        int height = LumberJack.getInstance().getDataHandler().getTreeMaxHeight();
+        int woodRange = LumberJack.getInstance().getDataHandler().getWoodRange();
+        int leavesRange = LumberJack.getInstance().getDataHandler().getLeavesRange();
+        for(int i = 0; i < height; i++) {
             location = new Location(startLocation.getWorld(), startLocation.getX(), startLocation.getY()+i, startLocation.getZ());
+            if(!location.getBlock().getType().equals(material)) {
+                height -= 2;
+            }
             double startX = location.getX();
             double startZ = location.getZ();
-            int range = LumberJack.getInstance().getDataHandler().getWoodRange();
-            for(int j = range * -1; j <= range; j++) {
-                for(int k = range * -1; k <= range; k++) {
+            for(int j = woodRange * -1; j <= woodRange; j++) {
+                for(int k = woodRange * -1; k <= woodRange; k++) {
                     location.setX(startX + j);
                     location.setZ(startZ + k);
                     if (location.getBlock().getType().equals(material)) {
@@ -53,12 +58,14 @@ public class TreeDestroy {
                 }
             }
             if(leavesMaterial != null) {
-                range = LumberJack.getInstance().getDataHandler().getLeavesRange();
-                for (int j = range * -1; j <= range; j++) {
-                    for (int k = range * -1; k <= range; k++) {
+                for (int j = leavesRange * -1; j <= leavesRange; j++) {
+                    for (int k = leavesRange * -1; k <= leavesRange; k++) {
                         location.setX(startX + j);
                         location.setZ(startZ + k);
-                        if (location.getBlock().getType().equals(leavesMaterial)) {
+                        Material leavesBlock = location.getBlock().getType();
+                        if(leavesBlock.equals(leavesMaterial) ||
+                                (material.equals(Material.OAK_LOG) && (leavesBlock.equals(Material.AZALEA_LEAVES)
+                                        || leavesBlock.equals(Material.FLOWERING_AZALEA_LEAVES))) ) {
                             leaves.add(new Location(location.getWorld(), location.getX(), location.getY(), location.getZ()));
                             totalLeaves++;
                         }
@@ -129,7 +136,9 @@ public class TreeDestroy {
                 return;
             }
             Location location = leaves.get(0);
-            if(location.getBlock().getType().equals(leavesMaterial)) {
+            Material leavesBlock = location.getBlock().getType();
+            if(leavesBlock.equals(leavesMaterial) || ((material.equals(Material.OAK_LOG) &&
+                    (leavesBlock.equals(Material.AZALEA_LEAVES) || leavesBlock.equals(Material.FLOWERING_AZALEA_LEAVES))))) {
                 location.getBlock().breakNaturally();
                 if(player.isOnline()) player.playSound(location, Sound.BLOCK_GRASS_BREAK, 1.0F, 1.0F);
             }
