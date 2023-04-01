@@ -21,14 +21,17 @@ public class TreeDestroy {
     private final BlockBreakEvent event;
     private int woodTask;
     private int leavesTask;
+    private boolean silkTouch;
+    private final boolean isNether;
     private final List<Location> woods = new ArrayList<>();
     private final List<Location> leaves = new ArrayList<>();
 
-    public TreeDestroy(Player player, Material material, Material leavesMaterial, Location location, BlockBreakEvent event) {
+    public TreeDestroy(Player player, Material material, Material leavesMaterial, Location location, BlockBreakEvent event, boolean nether) {
         this.player = player;
         this.material = material;
         this.leavesMaterial = leavesMaterial;
         this.event = event;
+        this.isNether = nether;
         checkBlock(location);
     }
 
@@ -65,7 +68,8 @@ public class TreeDestroy {
                         Material leavesBlock = location.getBlock().getType();
                         if(leavesBlock.equals(leavesMaterial) ||
                                 (material.equals(Material.OAK_LOG) && (leavesBlock.equals(Material.AZALEA_LEAVES)
-                                        || leavesBlock.equals(Material.FLOWERING_AZALEA_LEAVES))) ) {
+                                        || leavesBlock.equals(Material.FLOWERING_AZALEA_LEAVES)))
+                                || (isNether && leavesBlock.equals(Material.SHROOMLIGHT))) {
                             leaves.add(new Location(location.getWorld(), location.getX(), location.getY(), location.getZ()));
                             totalLeaves++;
                         }
@@ -79,6 +83,11 @@ public class TreeDestroy {
             ItemStack axe = player.getInventory().getItemInMainHand();
             if (!axe.getItemMeta().isUnbreakable() && axe.getType().getMaxDurability() != 0) {
                 int leavesReduction = LumberJack.getInstance().getDataHandler().getLeavesReduction();
+                if(axe.getItemMeta().getEnchantLevel(Enchantment.SILK_TOUCH) > 0) {
+                    leavesReduction = 1;
+                    silkTouch = true;
+                }
+                if(isNether) leavesReduction = 1;
                 int itemDurability = axe.getType().getMaxDurability() - axe.getDurability(); // Get item durability (eg. 1500)
                 int woodLeavesUse = totalWood + (totalLeaves / leavesReduction);
                 int uses = axe.getDurability() + woodLeavesUse; // Get item uses + new uses
@@ -121,12 +130,18 @@ public class TreeDestroy {
                 location.getBlock().setType(Material.AIR);
                 ItemStack is = new ItemStack(material);
                 is.setAmount(1);
-                if(hasSpace()) {
+                if(hasSpace(material)) {
                     player.getInventory().addItem(is);
                 } else {
                     location.getWorld().dropItem(location, is);
                 }
-                if(player.isOnline()) player.playSound(location, Sound.BLOCK_WOOD_BREAK, 1.0F, 1.0F);
+                if(player.isOnline()) {
+                    if(isNether) {
+                        player.playSound(location, Sound.BLOCK_STEM_BREAK, 1.0F, 1.0F);
+                    } else {
+                        player.playSound(location, Sound.BLOCK_WOOD_BREAK, 1.0F, 1.0F);
+                    }
+                }
             }
             woods.remove(0);
         }, 0, LumberJack.getInstance().getDataHandler().getWoodDestroyInterval());
@@ -138,22 +153,51 @@ public class TreeDestroy {
             Location location = leaves.get(0);
             Material leavesBlock = location.getBlock().getType();
             if(leavesBlock.equals(leavesMaterial) || ((material.equals(Material.OAK_LOG) &&
-                    (leavesBlock.equals(Material.AZALEA_LEAVES) || leavesBlock.equals(Material.FLOWERING_AZALEA_LEAVES))))) {
-                location.getBlock().breakNaturally();
-                if(player.isOnline()) player.playSound(location, Sound.BLOCK_GRASS_BREAK, 1.0F, 1.0F);
+                    (leavesBlock.equals(Material.AZALEA_LEAVES) || leavesBlock.equals(Material.FLOWERING_AZALEA_LEAVES))))
+                    || (isNether && leavesBlock.equals(Material.SHROOMLIGHT))) {
+                if(isNether) {
+                    if(hasSpace(leavesBlock)) {
+                        if(player.isOnline()) {
+                            location.getBlock().setType(Material.AIR);
+                            player.getInventory().addItem(new ItemStack(leavesBlock));
+                        } else {
+                            location.getBlock().breakNaturally();
+                        }
+                    } else {
+                        location.getBlock().breakNaturally();
+                    }
+                } else {
+                    if(silkTouch) {
+                        location.getBlock().setType(Material.AIR);
+                        if(hasSpace(leavesBlock)) {
+                            player.getInventory().addItem(new ItemStack(leavesBlock));
+                        } else {
+                            location.getWorld().dropItem(location, new ItemStack(leavesBlock));
+                        }
+                    } else {
+                        location.getBlock().breakNaturally();
+                    }
+                }
+                if(player.isOnline()) {
+                    if(isNether) {
+                        player.playSound(location, Sound.BLOCK_WART_BLOCK_BREAK, 1.0F, 1.0F);
+                    } else {
+                        player.playSound(location, Sound.BLOCK_GRASS_BREAK, 1.0F, 1.0F);
+                    }
+                }
             }
             leaves.remove(0);
         }, 0, LumberJack.getInstance().getDataHandler().getLeavesDestroyInterval());
     }
 
-    private boolean hasSpace() {
+    private boolean hasSpace(Material m) {
         if(!player.isOnline()) return false;
         Inventory playerInventory = player.getInventory();
         for(int i = 0; i < 36; i++) {
             if(player.getInventory().getItem(i) != null) {
                 if(playerInventory.getItem(i).equals(Material.AIR)) {
                     return true;
-                } else if(playerInventory.getItem(i).getType().equals(material)) {
+                } else if(playerInventory.getItem(i).getType().equals(m)) {
                     if(playerInventory.getItem(i).getAmount() < 64) {
                         return true;
                     }
