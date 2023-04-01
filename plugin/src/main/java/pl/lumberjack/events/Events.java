@@ -31,7 +31,6 @@ public class Events implements Listener {
             }
         }
         if(!found) return;
-        event.setCancelled(true); // Cancel event
         Location loc = event.getBlock().getLocation(); // Get location of block
         Material leavesMaterial;
         String block;
@@ -39,6 +38,7 @@ public class Events implements Listener {
             block = event.getBlock().getType().toString(); // Get log
             block = block.toLowerCase().replace("_log", "_leaves"); // Get this log leaves
             leavesMaterial = Material.getMaterial(block.toUpperCase()); // Get leaves (as material)
+            if(leavesMaterial == null) return;
         } else {
             if(event.getBlock().getType().equals(Material.WARPED_STEM)) {
                 leavesMaterial = Material.WARPED_WART_BLOCK;
@@ -48,6 +48,7 @@ public class Events implements Listener {
                 return;
             }
         }
+        event.setCancelled(true); // Cancel event
         new TreeDestroy(event.getPlayer(), event.getBlock().getType(), leavesMaterial, loc, event, isNether); // Create tree destroy
     }
 }

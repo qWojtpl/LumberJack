@@ -60,23 +60,19 @@ public class TreeDestroy {
                     }
                 }
             }
-            if(leavesMaterial != null) {
-                for (int j = leavesRange * -1; j <= leavesRange; j++) {
-                    for (int k = leavesRange * -1; k <= leavesRange; k++) {
-                        location.setX(startX + j);
-                        location.setZ(startZ + k);
-                        Material leavesBlock = location.getBlock().getType();
-                        if(leavesBlock.equals(leavesMaterial) ||
-                                (material.equals(Material.OAK_LOG) && (leavesBlock.equals(Material.AZALEA_LEAVES)
-                                        || leavesBlock.equals(Material.FLOWERING_AZALEA_LEAVES)))
-                                || (isNether && leavesBlock.equals(Material.SHROOMLIGHT))) {
-                            leaves.add(new Location(location.getWorld(), location.getX(), location.getY(), location.getZ()));
-                            totalLeaves++;
-                        }
+            for (int j = leavesRange * -1; j <= leavesRange; j++) {
+                for (int k = leavesRange * -1; k <= leavesRange; k++) {
+                    location.setX(startX + j);
+                    location.setZ(startZ + k);
+                    Material leavesBlock = location.getBlock().getType();
+                    if(leavesBlock.equals(leavesMaterial) ||
+                            (material.equals(Material.OAK_LOG) && (leavesBlock.equals(Material.AZALEA_LEAVES)
+                                    || leavesBlock.equals(Material.FLOWERING_AZALEA_LEAVES)))
+                            || (isNether && leavesBlock.equals(Material.SHROOMLIGHT))) {
+                        leaves.add(new Location(location.getWorld(), location.getX(), location.getY(), location.getZ()));
+                        totalLeaves++;
                     }
                 }
-            } else {
-                totalLeaves = requiredLeaves;
             }
         }
         if(totalLeaves >= requiredLeaves) {
@@ -195,7 +191,7 @@ public class TreeDestroy {
         Inventory playerInventory = player.getInventory();
         for(int i = 0; i < 36; i++) {
             if(player.getInventory().getItem(i) != null) {
-                if(playerInventory.getItem(i).equals(Material.AIR)) {
+                if(playerInventory.getItem(i).getType().equals(Material.AIR)) {
                     return true;
                 } else if(playerInventory.getItem(i).getType().equals(m)) {
                     if(playerInventory.getItem(i).getAmount() < 64) {
