@@ -6,7 +6,6 @@ import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import pl.lumberjack.LumberJack;
 
@@ -89,10 +88,10 @@ public class TreeDestroy {
                     int woodLeavesUse = totalWood + (totalLeaves / leavesReduction);
                     int uses = axe.getDurability() + woodLeavesUse; // Get item uses + new uses
                     if(itemDurability <= woodLeavesUse) { // Check if durability can handle wood and leaves
-                        if(itemDurability <= totalWood) { // If not check if can handle only wood
+                        if(itemDurability <= totalWood) { // If not - check if it can handle only wood
                             event.setCancelled(false); // If not, cancel event
                             return;
-                        } else { // If can handle only wood, remove leaves from uses
+                        } else { // If it can handle only wood, remove leaves from uses
                             leaves.clear();
                             uses -= (totalLeaves / leavesReduction);
                         }
@@ -131,7 +130,9 @@ public class TreeDestroy {
                 if(hasSpace(material)) {
                     player.getInventory().addItem(is);
                 } else {
-                    location.getWorld().dropItem(location, is);
+                    if(location.getWorld() == null) {
+                        location.getWorld().dropItem(location, is);
+                    }
                 }
                 if(player.isOnline()) {
                     if(isNether) {
@@ -170,7 +171,9 @@ public class TreeDestroy {
                         if(hasSpace(leavesBlock)) {
                             player.getInventory().addItem(new ItemStack(leavesBlock));
                         } else {
-                            location.getWorld().dropItem(location, new ItemStack(leavesBlock));
+                            if(location.getWorld() != null) {
+                                location.getWorld().dropItem(location, new ItemStack(leavesBlock));
+                            }
                         }
                     } else {
                         location.getBlock().breakNaturally();
@@ -190,13 +193,13 @@ public class TreeDestroy {
 
     private boolean hasSpace(Material m) {
         if(!player.isOnline()) return false;
-        Inventory playerInventory = player.getInventory();
         for(int i = 0; i < 36; i++) {
-            if(player.getInventory().getItem(i) != null) {
-                if(playerInventory.getItem(i).getType().equals(Material.AIR)) {
+            ItemStack item = player.getInventory().getItem(i);
+            if(item != null) {
+                if(item.getType().equals(Material.AIR)) {
                     return true;
-                } else if(playerInventory.getItem(i).getType().equals(m)) {
-                    if(playerInventory.getItem(i).getAmount() < 64) {
+                } else if(item.getType().equals(m)) {
+                    if(item.getAmount() < 64) {
                         return true;
                     }
                 }
