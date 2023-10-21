@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import pl.lumberjack.LumberJack;
 import pl.lumberjack.data.DataHandler;
 
@@ -14,7 +15,7 @@ public class Commands implements CommandExecutor {
     private final DataHandler dataHandler = plugin.getDataHandler();
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(sender instanceof Player) {
             if(!sender.hasPermission(plugin.getPermissionManager().getPermission("lumberjack.manage"))) {
                 sender.sendMessage("§cYou don't have permission!");

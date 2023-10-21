@@ -1,7 +1,9 @@
 package pl.lumberjack;
 
 import lombok.Getter;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.lumberjack.commands.CommandHelper;
 import pl.lumberjack.commands.Commands;
 import pl.lumberjack.data.DataHandler;
 import pl.lumberjack.events.Events;
@@ -21,7 +23,11 @@ public final class LumberJack extends JavaPlugin {
         dataHandler.loadConfig(); // Load config
         this.permissionManager = new PermissionManager(); // Register permissions
         getServer().getPluginManager().registerEvents(new Events(), this); // Register events
-        getCommand("lumberjack").setExecutor(new Commands()); // Register command
+        PluginCommand command = getCommand("lumberjack");
+        if(command != null) {
+            command.setExecutor(new Commands()); // Register command
+            command.setTabCompleter(new CommandHelper()); // Register command helper (tab completer)
+        }
         getLogger().info("Loaded!");
     }
 
@@ -33,4 +39,5 @@ public final class LumberJack extends JavaPlugin {
     public static LumberJack getInstance() {
         return main;
     }
+
 }
