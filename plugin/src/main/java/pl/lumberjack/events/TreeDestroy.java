@@ -130,7 +130,7 @@ public class TreeDestroy {
                 if(hasSpace(material)) {
                     player.getInventory().addItem(is);
                 } else {
-                    if(location.getWorld() == null) {
+                    if(location.getWorld() != null) {
                         location.getWorld().dropItem(location, is);
                     }
                 }
