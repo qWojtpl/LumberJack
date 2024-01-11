@@ -36,6 +36,9 @@ public class DataHandler {
         this.leavesRange = yml.getInt("config.leavesRange");
         this.requiredLeaves = yml.getInt("config.requiredLeaves");
         this.leavesReduction = yml.getInt("config.leavesReduction");
+        if(leavesReduction < 1) {
+            leavesReduction = 1;
+        }
         this.permission = yml.getString("config.permission");
         List<String> pot_axes = yml.getStringList("config.axes");
         if(pot_axes.size() == 0) {

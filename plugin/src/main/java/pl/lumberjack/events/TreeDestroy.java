@@ -49,8 +49,8 @@ public class TreeDestroy {
             }
             double startX = location.getX();
             double startZ = location.getZ();
-            for(int j = woodRange * -1; j <= woodRange; j++) {
-                for(int k = woodRange * -1; k <= woodRange; k++) {
+            for(int j = -woodRange; j <= woodRange; j++) {
+                for(int k = -woodRange; k <= woodRange; k++) {
                     location.setX(startX + j);
                     location.setZ(startZ + k);
                     if (location.getBlock().getType().equals(material)) {
@@ -59,8 +59,8 @@ public class TreeDestroy {
                     }
                 }
             }
-            for(int j = leavesRange * -1; j <= leavesRange; j++) {
-                for(int k = leavesRange * -1; k <= leavesRange; k++) {
+            for(int j = -leavesRange; j <= leavesRange; j++) {
+                for(int k = -leavesRange; k <= leavesRange; k++) {
                     location.setX(startX + j);
                     location.setZ(startZ + k);
                     Material leavesBlock = location.getBlock().getType();
@@ -82,32 +82,33 @@ public class TreeDestroy {
                     leavesReduction = 1;
                     silkTouch = true;
                 }
-                if(isNether) leavesReduction = 1;
+                if(isNether) {
+                    leavesReduction = 1;
+                }
                 if(!axe.getItemMeta().isUnbreakable() && axe.getType().getMaxDurability() != 0) {
                     int itemDurability = axe.getType().getMaxDurability() - axe.getDurability(); // Get item durability (eg. 1500)
                     int woodLeavesUse = totalWood + (totalLeaves / leavesReduction);
-                    int uses = axe.getDurability() + woodLeavesUse; // Get item uses + new uses
                     if(itemDurability <= woodLeavesUse) { // Check if durability can handle wood and leaves
                         if(itemDurability <= totalWood) { // If not - check if it can handle only wood
                             event.setCancelled(false); // If not, cancel event
                             return;
                         } else { // If it can handle only wood, remove leaves from uses
                             leaves.clear();
-                            uses -= (totalLeaves / leavesReduction);
+                            woodLeavesUse -= (totalLeaves / leavesReduction);
                         }
                     }
-                    int newUses = uses;
+                    int uses = axe.getDurability() + woodLeavesUse; // Get item uses + new uses
                     int enchantmentLevel = axe.getItemMeta().getEnchantLevel(Enchantment.DURABILITY);
                     if(enchantmentLevel > 0) {
                         for(int i = 0; i < woodLeavesUse; i++) {
                             int chance = 100 / (enchantmentLevel + 1);
                             int random = (int) Math.floor(Math.random() * (100 + 1));
-                            if (random < chance) {
-                                newUses--;
+                            if(random < chance) {
+                                uses--;
                             }
                         }
                     }
-                    axe.setDurability((short) newUses);
+                    axe.setDurability((short) uses);
                 }
             }
             destroyTree();

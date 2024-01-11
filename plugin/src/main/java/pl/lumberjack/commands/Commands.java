@@ -38,6 +38,7 @@ public class Commands implements CommandExecutor {
         sender.sendMessage("§6Wood range: §2" + dataHandler.getWoodRange());
         sender.sendMessage("§6Leaves range: §2" + dataHandler.getLeavesRange());
         sender.sendMessage("§6Required leaves: §2" + dataHandler.getRequiredLeaves());
+        sender.sendMessage("§6Leaves reduction: §2" + dataHandler.getLeavesReduction());
         sender.sendMessage("§6Permission to use: §2" + dataHandler.getPermission());
         String axes = dataHandler.getAxes().get(0).toString();
         int i = 0;
