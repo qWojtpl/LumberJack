@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/qWojtpl/LumberJack/tree/main/images/logo.png">
+    <img src="images/logo.png">
 </p>
 
 # LumberJack
