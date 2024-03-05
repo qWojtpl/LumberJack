@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://media.discordapp.net/attachments/816647374239694849/1090391345010581595/picturetopeople.png">
+    <img src="https://github.com/qWojtpl/LumberJack/tree/main/images/logo.png">
 </p>
 
 # LumberJack
